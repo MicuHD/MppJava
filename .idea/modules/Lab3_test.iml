@@ -10,10 +10,12 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Lab3_main" />
-    <orderEntry type="module" module-name="model_main" />
+    <orderEntry type="module" module-name="services_main" />
     <orderEntry type="library" name="Gradle: junit:junit:4.11" level="project" />
+    <orderEntry type="module" module-name="model_main" />
+    <orderEntry type="module" module-name="Persistance_main" />
+    <orderEntry type="library" name="Gradle: org.xerial:sqlite-jdbc:3.16.1" level="project" />
     <orderEntry type="library" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.xerial:sqlite-jdbc:3.16.1" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="Lab3_main" />
 </module>

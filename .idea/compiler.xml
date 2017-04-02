@@ -6,6 +6,10 @@
       <module name="Lab3_test" target="1.8" />
       <module name="model_main" target="1.8" />
       <module name="model_test" target="1.8" />
+      <module name="Persistance_main" target="1.8" />
+      <module name="Persistance_test" target="1.8" />
+      <module name="services_main" target="1.8" />
+      <module name="services_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

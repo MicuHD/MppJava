@@ -3,11 +3,10 @@ package aplicatie.service;
 import aplicatie.domain.Cumparator;
 import aplicatie.domain.Personal;
 import aplicatie.domain.Spectacol;
+
 import aplicatie.repository.IRepository;
 import aplicatie.repository.IUserRepository;
-import aplicatie.utils.Observable;
 import aplicatie.utils.Observer;
-import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,17 +72,6 @@ public class ComandService implements ICommandService<Spectacol> {
     }
 
     public Personal login(String username, String password){
-
-//        Iterable<Personal> pers = repo.findAll();
-//        for (Personal persoana: pers) {
-//            if(persoana.getUsername().equals(username) && persoana.getParola().equals(password)){
-//                //System.out.println("ceva merge"+username+" "+password);
-//                Personal per = persoana;
-//                per.setParola("");
-//                return per;
-//            }
-//        }
-//        return null;
         Personal pers = new Personal(username,password);
         return (Personal)persrepo.login(pers);
     }

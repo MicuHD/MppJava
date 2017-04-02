@@ -5,9 +5,15 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Lab3.iml" filepath="$PROJECT_DIR$/.idea/modules/Lab3.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Lab3_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Lab3_main.iml" group="Lab3" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Lab3_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Lab3_test.iml" group="Lab3" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/persistance/Persistance.iml" filepath="$PROJECT_DIR$/.idea/modules/persistance/Persistance.iml" group="Persistance" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/persistance/Persistance_main.iml" filepath="$PROJECT_DIR$/.idea/modules/persistance/Persistance_main.iml" group="Persistance" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/persistance/Persistance_test.iml" filepath="$PROJECT_DIR$/.idea/modules/persistance/Persistance_test.iml" group="Persistance" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Model/model.iml" filepath="$PROJECT_DIR$/.idea/modules/Model/model.iml" group="model" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Model/model_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Model/model_main.iml" group="model" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Model/model_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Model/model_test.iml" group="model" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/services/services.iml" filepath="$PROJECT_DIR$/.idea/modules/services/services.iml" group="services" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/services/services_main.iml" filepath="$PROJECT_DIR$/.idea/modules/services/services_main.iml" group="services" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/services/services_test.iml" filepath="$PROJECT_DIR$/.idea/modules/services/services_test.iml" group="services" />
     </modules>
   </component>
 </project>

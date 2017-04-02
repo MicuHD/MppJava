@@ -55,13 +55,6 @@ public class Main extends Application {
 
     }
 
-    static LoginService getLoginService(Properties serverProps){
-
-        PersonalJdbcRepository repo=new PersonalJdbcRepository(serverProps);
-        LoginService service=new LoginService(repo);
-        return service;
-
-    }
     static ComandService getService(Properties serverProps){
 
         PersonalJdbcRepository repoP=new PersonalJdbcRepository(serverProps);
