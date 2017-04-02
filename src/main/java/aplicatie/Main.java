@@ -2,6 +2,9 @@ package aplicatie; /**
  * Created by Micu on 3/18/2017.
  */
 
+import aplicatie.repository.CumparatorJdbcRepository;
+import aplicatie.repository.SpectacolJdbcRepository;
+import aplicatie.service.ComandService;
 import aplicatie.View.LoginView;
 import aplicatie.repository.PersonalJdbcRepository;
 import aplicatie.service.LoginService;
@@ -41,7 +44,7 @@ public class Main extends Application {
         try {
             myPane = (AnchorPane) loader.load();
             serv = loader.getController();
-            serv.setService(getLoginService(serverProps),serverProps);
+            serv.setService(getService(serverProps),serverProps);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,6 +59,15 @@ public class Main extends Application {
 
         PersonalJdbcRepository repo=new PersonalJdbcRepository(serverProps);
         LoginService service=new LoginService(repo);
+        return service;
+
+    }
+    static ComandService getService(Properties serverProps){
+
+        PersonalJdbcRepository repoP=new PersonalJdbcRepository(serverProps);
+        CumparatorJdbcRepository repoC=new CumparatorJdbcRepository(serverProps);
+        SpectacolJdbcRepository repoS=new SpectacolJdbcRepository(serverProps);
+        ComandService service=new ComandService(repoS,repoC,repoP);
         return service;
 
     }

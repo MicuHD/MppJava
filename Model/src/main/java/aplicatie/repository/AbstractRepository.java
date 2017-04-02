@@ -1,5 +1,7 @@
 package aplicatie.repository;
 
+import aplicatie.domain.HasId;
+
 import java.util.HashMap;
 import java.util.Map;
 

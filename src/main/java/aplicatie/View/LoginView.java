@@ -41,9 +41,9 @@ public class LoginView {
 
     }
 
-    private LoginService service;
+    private ComandService service;
     private Properties props;
-    public void setService(LoginService service, Properties props){
+    public void setService(ComandService service, Properties props){
         this.service=service;
         this.props = props;
     }
@@ -67,7 +67,7 @@ public class LoginView {
                 try {
                     myPane = (AnchorPane) loader.load();
                     ComandPanelView serv = loader.getController();
-                    serv.setService(new ComandService(new SpectacolJdbcRepository(props),new CumparatorJdbcRepository(props)),props,pers);
+                    serv.setService(service,props,pers);
 
                 } catch (IOException e) {
                     e.printStackTrace();

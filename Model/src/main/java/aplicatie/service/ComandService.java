@@ -4,6 +4,7 @@ import aplicatie.domain.Cumparator;
 import aplicatie.domain.Personal;
 import aplicatie.domain.Spectacol;
 import aplicatie.repository.IRepository;
+import aplicatie.repository.IUserRepository;
 import aplicatie.utils.Observable;
 import aplicatie.utils.Observer;
 import javafx.collections.ObservableList;
@@ -14,13 +15,15 @@ import java.util.List;
 /**
  * Created by Micu on 3/18/2017.
  */
-public class ComandService implements Observable<Spectacol> {
+public class ComandService implements ICommandService<Spectacol> {
     ArrayList<Observer<Spectacol>> obs = new ArrayList<>();
     IRepository specrepo;
     IRepository cumprepo;
-    public ComandService(IRepository specrepo,IRepository cumparrepo){
+    IUserRepository persrepo;
+    public ComandService(IRepository specrepo,IRepository cumparrepo,IUserRepository persrepo){
         this.specrepo = specrepo;
         this.cumprepo = cumparrepo;
+        this.persrepo = persrepo;
     }
 
     public List<Spectacol> getSpecacol(){
@@ -67,5 +70,21 @@ public class ComandService implements Observable<Spectacol> {
             }
         }
         return spectacols;
+    }
+
+    public Personal login(String username, String password){
+
+//        Iterable<Personal> pers = repo.findAll();
+//        for (Personal persoana: pers) {
+//            if(persoana.getUsername().equals(username) && persoana.getParola().equals(password)){
+//                //System.out.println("ceva merge"+username+" "+password);
+//                Personal per = persoana;
+//                per.setParola("");
+//                return per;
+//            }
+//        }
+//        return null;
+        Personal pers = new Personal(username,password);
+        return (Personal)persrepo.login(pers);
     }
 }

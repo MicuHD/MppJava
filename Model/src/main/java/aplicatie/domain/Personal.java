@@ -30,6 +30,18 @@ public class Personal {
         this.username = username;
         this.parola = parola;
     }
+    public Personal(Integer id,String nume, String username) {
+        this.id = -1;
+        this.nume = nume;
+        this.username = username;
+        this.parola = "";
+    }
+    public Personal(String username, String password) {
+        this.id=-1;
+        this.nume="";
+        this.username = username;
+        this.parola = password;
+    }
 
     public Integer getId() {
 

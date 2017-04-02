@@ -13,7 +13,7 @@ import java.util.Properties;
 /**
  * Created by grigo on 3/2/17.
  */
-public class PersonalJdbcRepository implements IRepository<Integer,Personal> {
+public class PersonalJdbcRepository implements IUserRepository<Integer,Personal> {
     private JdbcUtils dbUtils;
 
     public PersonalJdbcRepository(Properties props){
@@ -111,5 +111,25 @@ public class PersonalJdbcRepository implements IRepository<Integer,Personal> {
     }
 
 
+    @Override
+    public Personal login(Personal user) {
+        Connection con=dbUtils.getConnection();
 
+        try(PreparedStatement preStmt=con.prepareStatement("select * from Personal where username=? and parola=?")){
+            preStmt.setString(1,user.getUsername());
+            preStmt.setString(2,user.getParola());
+            try(ResultSet result=preStmt.executeQuery()) {
+                if (result.next()) {
+                    int id = result.getInt("id");
+                    String nume = result.getString("nume");
+                    String username = result.getString("username");
+                    Personal pers = new Personal(id, nume,username);
+                    return pers;
+                }
+            }
+        }catch (SQLException ex){
+            System.out.println("Error DB "+ex);
+        }
+        return null;
+    }
 }

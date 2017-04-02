@@ -3,9 +3,9 @@
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/../../../Model/build/classes/main" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../../Model/src/main">
-      <sourceFolder url="file://$MODULE_DIR$/../../../Model/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../Model/src/main/resources" type="java-resource" />
+    <content url="file://$MODULE_DIR$/../../../model/src/main">
+      <sourceFolder url="file://$MODULE_DIR$/../../../model/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../model/src/main/resources" type="java-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
