@@ -2,11 +2,7 @@ package aplicatie.View;
 
 
 import aplicatie.domain.Personal;
-import aplicatie.repository.ArtistlJdbcRepository;
-import aplicatie.repository.CumparatorJdbcRepository;
-import aplicatie.repository.SpectacolJdbcRepository;
 import aplicatie.service.ComandService;
-import aplicatie.service.LoginService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -19,7 +15,6 @@ import javafx.stage.Stage;
 
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Properties;

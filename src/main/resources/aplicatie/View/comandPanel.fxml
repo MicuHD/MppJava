@@ -8,7 +8,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="268.0" maxWidth="882.0" minHeight="110.0" minWidth="250" prefHeight="268.0" prefWidth="882.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="aplicatie.View.ComandPanelView">
+<AnchorPane maxHeight="268.0" maxWidth="882.0" minHeight="110.0" minWidth="250" prefHeight="268.0" prefWidth="882.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="aplicatie.aplicatie.View.ComandPanelView">
    <children>
       <Button fx:id="logoutBtn" layoutX="379.0" layoutY="217.0" mnemonicParsing="false" onAction="#handleLogout" text="Log out" />
       <TableView fx:id="tableView" layoutX="14.0" layoutY="42.0" prefHeight="200.0" prefWidth="362.0">

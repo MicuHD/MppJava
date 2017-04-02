@@ -7,7 +7,6 @@ import aplicatie.repository.SpectacolJdbcRepository;
 import aplicatie.service.ComandService;
 import aplicatie.View.LoginView;
 import aplicatie.repository.PersonalJdbcRepository;
-import aplicatie.service.LoginService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

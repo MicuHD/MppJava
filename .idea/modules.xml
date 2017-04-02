@@ -8,9 +8,18 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/persistance/Persistance.iml" filepath="$PROJECT_DIR$/.idea/modules/persistance/Persistance.iml" group="Persistance" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/persistance/Persistance_main.iml" filepath="$PROJECT_DIR$/.idea/modules/persistance/Persistance_main.iml" group="Persistance" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/persistance/Persistance_test.iml" filepath="$PROJECT_DIR$/.idea/modules/persistance/Persistance_test.iml" group="Persistance" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/client/client.iml" filepath="$PROJECT_DIR$/.idea/modules/client/client.iml" group="client" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/client/client_main.iml" filepath="$PROJECT_DIR$/.idea/modules/client/client_main.iml" group="client" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/client/client_test.iml" filepath="$PROJECT_DIR$/.idea/modules/client/client_test.iml" group="client" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Model/model.iml" filepath="$PROJECT_DIR$/.idea/modules/Model/model.iml" group="model" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Model/model_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Model/model_main.iml" group="model" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Model/model_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Model/model_test.iml" group="model" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/networking/networking.iml" filepath="$PROJECT_DIR$/.idea/modules/networking/networking.iml" group="networking" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/networking/networking_main.iml" filepath="$PROJECT_DIR$/.idea/modules/networking/networking_main.iml" group="networking" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/networking/networking_test.iml" filepath="$PROJECT_DIR$/.idea/modules/networking/networking_test.iml" group="networking" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/server/server.iml" filepath="$PROJECT_DIR$/.idea/modules/server/server.iml" group="server" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/server/server_main.iml" filepath="$PROJECT_DIR$/.idea/modules/server/server_main.iml" group="server" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/server/server_test.iml" filepath="$PROJECT_DIR$/.idea/modules/server/server_test.iml" group="server" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/services/services.iml" filepath="$PROJECT_DIR$/.idea/modules/services/services.iml" group="services" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/services/services_main.iml" filepath="$PROJECT_DIR$/.idea/modules/services/services_main.iml" group="services" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/services/services_test.iml" filepath="$PROJECT_DIR$/.idea/modules/services/services_test.iml" group="services" />

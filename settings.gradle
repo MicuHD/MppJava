@@ -4,4 +4,7 @@ findProject(':Model')?.name = 'model'
 include 'persistance'
 findProject(':persistance')?.name = 'Persistance'
 include 'services'
+include 'networking'
+include 'server'
+include 'client'
 

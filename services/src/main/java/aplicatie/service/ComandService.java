@@ -14,8 +14,7 @@ import java.util.List;
 /**
  * Created by Micu on 3/18/2017.
  */
-public class ComandService implements ICommandService<Spectacol> {
-    ArrayList<Observer<Spectacol>> obs = new ArrayList<>();
+public class ComandService implements IServer {
     IRepository specrepo;
     IRepository cumprepo;
     IUserRepository persrepo;
@@ -39,26 +38,9 @@ public class ComandService implements ICommandService<Spectacol> {
         spec.getVandute()+nrbilete,spec.getArtist(),spec.getData(),spec.getOra());
         specrepo.update(spec.getId(),nspec);
         cumprepo.save(new Cumparator(nume,nrbilete,spec.getId()));
-        notifyObservers();
         return true;
     }
 
-    @Override
-    public void addObserver(Observer<Spectacol> o) {
-        obs.add(o);
-    }
-
-    @Override
-    public void removeObserver(Observer<Spectacol> o) {
-        obs.remove(o);
-    }
-
-    @Override
-    public void notifyObservers() {
-        for (Observer<Spectacol> o:obs) {
-            o.update(this);
-        }
-    }
 
     public List<Spectacol> cautare(String data) {
         List<Spectacol> spectacols = new ArrayList<>();
@@ -74,5 +56,15 @@ public class ComandService implements ICommandService<Spectacol> {
     public Personal login(String username, String password){
         Personal pers = new Personal(username,password);
         return (Personal)persrepo.login(pers);
+    }
+
+    @Override
+    public void login(Personal pers, IClient client) throws ChatException {
+
+    }
+
+    @Override
+    public void logout(Personal user, IClient client) throws ChatException {
+
     }
 }

@@ -21,6 +21,7 @@ public class JdbcUtils {
         Connection con=null;
         try {
             Class.forName(driver);
+//                con=DriverManager.getConnection("Festival");
                 con=DriverManager.getConnection(url);
         } catch (ClassNotFoundException e) {
             System.out.println("Error loading driver "+e);
