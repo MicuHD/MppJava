@@ -1,15 +1,13 @@
 package network.rpcprotocol;
 
 
+import aplicatie.domain.Cumparator;
 import aplicatie.domain.Personal;
 import aplicatie.domain.Spectacol;
 import aplicatie.service.ChatException;
 import aplicatie.service.IClient;
 import aplicatie.service.IServer;
-import network.dto.CuvantDTO;
-import network.dto.DTOUtils;
-import network.dto.PersDTO;
-import network.dto.SpectacolDTO;
+import network.dto.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -54,6 +52,17 @@ public class ChatServerRpcProxy implements IServer {
         return Arrays.asList(friends);
     }
 
+    public boolean cumparare(Cumparator cump) throws ChatException {
+        CumparatorDTO cdto = DTOUtils.getDTO(cump);
+        Request req = new Request.Builder().type(RequestType.SELL_TICKET).data(cdto).build();
+        sendRequest(req);
+        Response response = readResponse();
+        if(response.type() == ResponseType.ERROR){
+            return false;
+        }
+        return true;
+    }
+
     public List<Spectacol> cautare(String data) throws ChatException {
         CuvantDTO cdto= DTOUtils.getDTO(data);
         Request req = new Request.Builder().type(RequestType.SEARCH_SPECTACOLS).data(cdto).build();
@@ -67,7 +76,7 @@ public class ChatServerRpcProxy implements IServer {
         return Arrays.asList(friends);
     }
 
-    public void login(Personal user, IClient client) throws ChatException {
+    public Personal login(Personal user, IClient client) throws ChatException {
         initializeConnection();
         PersDTO udto= DTOUtils.getDTO(user);
         Request req=new Request.Builder().type(RequestType.LOGIN).data(udto).build();
@@ -75,58 +84,29 @@ public class ChatServerRpcProxy implements IServer {
         Response response=readResponse();
         if (response.type()== ResponseType.OK){
             this.client=client;
-            return;
+            Personal pers = DTOUtils.getFromDTO((PersDTO) response.data());
+            return pers;
         }
         if (response.type()== ResponseType.ERROR){
             String err=response.data().toString();
             closeConnection();
             throw new ChatException(err);
         }
+        return null;
     }
 
-    @Override
     public void logout(Personal user, IClient client) throws ChatException {
-
+        Personal pers;
+        PersDTO udto=DTOUtils.getDTO(user);
+        Request req=new Request.Builder().type(RequestType.LOGOUT).data(udto).build();
+        sendRequest(req);
+        Response response=readResponse();
+        closeConnection();
+        if (response.type()== ResponseType.ERROR){
+            String err=response.data().toString();
+            throw new ChatException(err);
+        }
     }
-
-//    public void sendMessage(Message message) throws ChatException {
-//        MessageDTO mdto=DTOUtils.getDTO(message);
-//        Request req=new Request.Builder().type(RequestType.SEND_MESSAGE).data(mdto).build();
-//        sendRequest(req);
-//        Response response=readResponse();
-//        if (response.type()== ResponseType.ERROR){
-//            String err=response.data().toString();
-//            throw new ChatException(err);
-//        }
-//    }
-
-//    public void logout(IChatClient client) throws ChatException {
-//        UserDTO udto=DTOUtils.getDTO(user);
-//        Request req=new Request.Builder().type(RequestType.LOGOUT).data(udto).build();
-//        sendRequest(req);
-//        Response response=readResponse();
-//        closeConnection();
-//        if (response.type()== ResponseType.ERROR){
-//            String err=response.data().toString();
-//            throw new ChatException(err);
-//        }
-//    }
-
-
-
-//    public User[] getLoggedFriends(User user) throws ChatException {
-//        UserDTO udto=DTOUtils.getDTO(user);
-//        Request req=new Request.Builder().type(RequestType.GET_LOGGED_FRIENDS).data(udto).build();
-//        sendRequest(req);
-//        Response response=readResponse();
-//        if (response.type()== ResponseType.ERROR){
-//            String err=response.data().toString();
-//            throw new ChatException(err);
-//        }
-//        UserDTO[] frDTO=(UserDTO[])response.data();
-//        User[] friends=DTOUtils.getFromDTO(frDTO);
-//        return friends;
-//    }
 
     private void closeConnection() {
         finished=true;
@@ -138,7 +118,6 @@ public class ChatServerRpcProxy implements IServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     private void sendRequest(Request request)throws ChatException {
@@ -154,10 +133,6 @@ public class ChatServerRpcProxy implements IServer {
     private Response readResponse() throws ChatException {
         Response response=null;
         try{
-            /*synchronized (responses){
-                responses.wait();
-            }
-            response = responses.remove(0);    */
             response=qresponses.take();
 
         } catch (InterruptedException e) {
@@ -182,53 +157,40 @@ public class ChatServerRpcProxy implements IServer {
         tw.start();
     }
 
-//    @Override
-//    public Personal login(String username, String password) {
-//
-//    }
+    private void handleUpdate(Response response){
+        if (response.type()== ResponseType.SOLD_TICKET){
 
+            System.out.println("SOLT TICKET");
+            try {
+                SpectacolDTO sdto = (SpectacolDTO)response.data();
+                Spectacol spec = DTOUtils.getFromDTO(sdto);
+                client.SoldTickets(spec);
+            } catch (ChatException e) {
+                e.printStackTrace();
+            }
+        }
 
-    //    private void handleUpdate(Response response){
-//        if (response.type()== ResponseType.FRIEND_LOGGED_IN){
-//
-//            User friend=DTOUtils.getFromDTO((UserDTO) response.data());
-//            System.out.println("Friend logged in "+friend);
-//            try {
-//                client.friendLoggedIn(friend);
-//            } catch (ChatException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        if (response.type()== ResponseType.FRIEND_LOGGED_OUT){
-//            User friend=DTOUtils.getFromDTO((UserDTO)response.data());
-//            System.out.println("Friend logged out "+friend);
-//            try {
-//                client.friendLoggedOut(friend);
-//            } catch (ChatException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        if (response.type()== ResponseType.NEW_MESSAGE){
-//            Message message=DTOUtils.getFromDTO((MessageDTO)response.data());
-//            try {
-//                client.messageReceived(message);
-//            } catch (ChatException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
+    }
+
+    private boolean isUpdate(Response response){
+        return response.type()== ResponseType.SOLD_TICKET;
+    }
     private class ReaderThread implements Runnable{
         public void run() {
             while(!finished){
                 try {
                     Object response=input.readObject();
                     System.out.println("response received "+response);
+                    if (isUpdate((Response)response)){
+                        handleUpdate((Response)response);
+                    }else{
+
                         try {
                             qresponses.put((Response)response);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+                    }
                 } catch (IOException e) {
                     System.out.println("Reading error "+e);
                 } catch (ClassNotFoundException e) {
@@ -237,4 +199,11 @@ public class ChatServerRpcProxy implements IServer {
             }
         }
     }
+
+
+
+
+
+
+
 }

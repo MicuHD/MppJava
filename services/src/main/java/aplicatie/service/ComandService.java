@@ -32,13 +32,14 @@ public class ComandService implements IServer {
         return spectacols;
     }
 
-    public boolean cumparare(Spectacol spec, String nume,Integer nrbilete)
+    public boolean cumparare(Cumparator cump)
     {
-        Spectacol nspec = new Spectacol(spec.getLocatie(),spec.getDisponibile()-nrbilete, //
-        spec.getVandute()+nrbilete,spec.getArtist(),spec.getData(),spec.getOra());
-        specrepo.update(spec.getId(),nspec);
-        cumprepo.save(new Cumparator(nume,nrbilete,spec.getId()));
-        return true;
+//        Spectacol nspec = new Spectacol(spec.getLocatie(),spec.getDisponibile()-nrbilete, //
+//        spec.getVandute()+nrbilete,spec.getArtist(),spec.getData(),spec.getOra());
+//        specrepo.update(spec.getId(),nspec);
+//        cumprepo.save(new Cumparator(nume,nrbilete,spec.getId()));
+//        return true;
+        return false;
     }
 
 
@@ -59,12 +60,11 @@ public class ComandService implements IServer {
     }
 
     @Override
-    public void login(Personal pers, IClient client) throws ChatException {
-
+    public Personal login(Personal pers, IClient client) throws ChatException {
+        return null;
     }
 
     @Override
     public void logout(Personal user, IClient client) throws ChatException {
-
     }
 }

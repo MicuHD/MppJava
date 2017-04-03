@@ -1,6 +1,7 @@
 package aplicatie.View;
 
 
+import aplicatie.domain.Cumparator;
 import aplicatie.domain.Personal;
 import aplicatie.domain.Spectacol;
 import aplicatie.service.ChatException;
@@ -126,8 +127,9 @@ public class ComandCtrl implements IClient{
         }
         this.tableCView.setItems(modelC);
     }
-    public void setService(IServer serv){
+    public void setService(IServer serv,Personal pers){
         this.server=serv;
+        this.personal=pers;
         //Stage thisStage = (Stage)logoutBtn.getScene().getWindow();
         //stage.setTitle("Vanzator: " + pers.getNume());
         try {
@@ -145,11 +147,16 @@ public class ComandCtrl implements IClient{
     @FXML
     public void handleLogout(){
         Stage thisStage = (Stage)logoutBtn.getScene().getWindow();
-            //server.logout(personal,this);
+        try {
+            server.logout(personal,this);
             Platform.exit();
             System.exit(0);
             thisStage.close();
             thisStage.close();
+        } catch (ChatException e) {
+            e.printStackTrace();
+        }
+
 
 
     }
@@ -163,14 +170,15 @@ public class ComandCtrl implements IClient{
             else{
                 String nume = this.numeField.getText();
                 Integer nrbilet = this.spinnerCount.getValue();
-                if(nrbilet > spec.getDisponibile()){
+                if(nrbilet > spec.getDisponibile() || nrbilet == 0){
                     showErrorMessage("Numarul de bilete cerut este indisponibil");
                 }
                 else if(spec.equals(null)){
                     showErrorMessage("Alegeti un spectacol");
                 }
                 else{
-                    //service.cumparare(spec,nume,nrbilet);
+
+                    server.cumparare(new Cumparator(nume,nrbilet,spec.getId()));
                     this.tableCView.setItems(null);
                 }
 
@@ -178,6 +186,8 @@ public class ComandCtrl implements IClient{
             }
         }catch (NullPointerException err){
             showErrorMessage("Alegeti un spectacol");
+        } catch (ChatException e) {
+            showErrorMessage("Numarul de bilete cerut este indisponibil");
         }
 
 
@@ -190,9 +200,17 @@ public class ComandCtrl implements IClient{
         message.showAndWait();
     }
 
-    @Override
-    public void SoldTickets() {
-
+    public void SoldTickets(Spectacol spec) {
+        System.out.println("ID_ul ESTEEE"+spec.getId().toString());
+//        int index = model.indexOf(spec);
+        for(int i=0;i<model.size();i++){
+            if(model.get(i).getId().equals(spec.getId())){
+                model.set(i,spec);
+                break;
+            }
+        }
+        tableView.setItems(model);
+        tableView.refresh();
     }
 }
 

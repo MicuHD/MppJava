@@ -1,6 +1,7 @@
 package aplicatie.View;
 
 
+import aplicatie.domain.Cumparator;
 import aplicatie.domain.Personal;
 import aplicatie.domain.Spectacol;
 import aplicatie.service.ComandService;
@@ -137,7 +138,7 @@ public class ComandPanelView implements Observer<Spectacol>{
                     showErrorMessage("Alegeti un spectacol");
                 }
                 else{
-                    service.cumparare(spec,nume,nrbilet);
+                    service.cumparare(new Cumparator("",0,0));
                     this.tableCView.setItems(null);
                 }
 

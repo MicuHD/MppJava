@@ -1,14 +1,12 @@
 package network.rpcprotocol;
 
+import aplicatie.domain.Cumparator;
 import aplicatie.domain.Personal;
 import aplicatie.domain.Spectacol;
 import aplicatie.service.ChatException;
 import aplicatie.service.IClient;
 import aplicatie.service.IServer;
-import network.dto.CuvantDTO;
-import network.dto.DTOUtils;
-import network.dto.PersDTO;
-import network.dto.SpectacolDTO;
+import network.dto.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -76,16 +74,30 @@ public class ChatClientRpcWorker implements Runnable, IClient {
             PersDTO udto=(PersDTO)request.data();
             Personal user= DTOUtils.getFromDTO(udto);
             try {
-                server.login(user, this);
+                Personal pers = server.login(user, this);
+                okResponse=new Response.Builder().type(ResponseType.OK).data(DTOUtils.getDTO(pers)).build();
                 return okResponse;
             } catch (ChatException e) {
                 connected=false;
                 return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
             }
         }
+        if (request.type()==RequestType.LOGOUT){
+            System.out.println("Logout request");
+            // LogoutRequest logReq=(LogoutRequest)request;
+            PersDTO udto=(PersDTO)request.data();
+            Personal user=DTOUtils.getFromDTO(udto);
+            try {
+                server.logout(user, this);
+                connected=false;
+                return okResponse;
+
+            } catch (ChatException e) {
+                return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
+            }
+        }
         if (request.type()==RequestType.GET_SPECTACOLS){
             System.out.println("Spectacols request");
-           // LogoutRequest logReq=(LogoutRequest)request;
             try {
                 server.getSpecacol();
 
@@ -110,32 +122,18 @@ public class ChatClientRpcWorker implements Runnable, IClient {
                 return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
             }
         }
+        if (request.type()==RequestType.SELL_TICKET){
+            System.out.println("Sell ticket request");
+            try {
+                CumparatorDTO udto=(CumparatorDTO) request.data();
+                Cumparator cump = DTOUtils.getFromDTO(udto);
+                boolean  ok = server.cumparare(cump);
+                return okResponse;
+            } catch (ChatException e) {
+                return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
+            }
+        }
 
-
-//        if (request.type()==RequestType.SEND_MESSAGE){
-//            System.out.println("SendMessageRequest ...");
-//            MessageDTO mdto=(MessageDTO)request.data();
-//            Message message=DTOUtils.getFromDTO(mdto);
-//            try {
-//                server.sendMessage(message);
-//                return okResponse;
-//            } catch (ChatException e) {
-//                return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
-//            }
-//        }
-//
-//        if (request.type()==RequestType.GET_LOGGED_FRIENDS){
-//            System.out.println("GetLoggedFriends Request ...");
-//            UserDTO udto=(UserDTO)request.data();
-//            User user=DTOUtils.getFromDTO(udto);
-//            try {
-//                User[] friends=server.getLoggedFriends(user);
-//                UserDTO[] frDTO=DTOUtils.getDTO(friends);
-//                return new Response.Builder().type(ResponseType.GET_LOGGED_FRIENDS).data(frDTO).build();
-//            } catch (ChatException e) {
-//                return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
-//            }
-//        }
         return response;
     }
 
@@ -145,8 +143,15 @@ public class ChatClientRpcWorker implements Runnable, IClient {
         output.flush();
     }
 
-    @Override
-    public void SoldTickets() {
 
+    public void SoldTickets(Spectacol spec) {
+        SpectacolDTO udto=DTOUtils.getDTO(spec);
+        Response resp=new Response.Builder().type(ResponseType.SOLD_TICKET).data(udto).build();
+        System.out.println("SOLD TICKET!!!!!!!!!!!!!!!");
+        try {
+            sendResponse(resp);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

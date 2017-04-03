@@ -2,6 +2,7 @@ package aplicatie.View;
 
 
 import aplicatie.domain.Personal;
+import aplicatie.domain.Spectacol;
 import aplicatie.service.ChatException;
 import aplicatie.service.ComandService;
 import aplicatie.service.IClient;
@@ -9,15 +10,14 @@ import aplicatie.service.IServer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import javax.smartcardio.CommandAPDU;
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
@@ -34,7 +34,7 @@ public class LoginView implements IClient{
     public TextField userField;
     @FXML
     public Label label;
-
+    ComandCtrl serv;
     public LoginView(){
 
     }
@@ -54,7 +54,7 @@ public class LoginView implements IClient{
             md5 = MessageDigest.getInstance("MD5");
             String hex = (new HexBinaryAdapter()).marshal(md5.digest(passString.getBytes()));
             //Personal pers = service.login(userField.getText(),hex.toString());
-            service.login(new Personal(userField.getText(),hex.toString()),this);
+            Personal pers = service.login(new Personal(userField.getText(),hex.toString()),this);
             System.out.println("yeeep");
 //            System.out.println(pers.getNume());
 //            if(pers.equals(null)){
@@ -65,8 +65,8 @@ public class LoginView implements IClient{
                 AnchorPane myPane = null;
                 try {
                     myPane = (AnchorPane) loader.load();
-                    ComandCtrl serv = loader.getController();
-                    serv.setService(service);
+                    serv = loader.getController();
+                    serv.setService(service,pers);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -86,14 +86,25 @@ public class LoginView implements IClient{
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (ChatException e) {
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Look, an Error Dialog");
+            alert.setContentText(e.getMessage());
+
+            alert.showAndWait();
+        } catch (NullPointerException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Server Error or something else");
+            alert.setContentText(e.getMessage());
         }
 
 
     }
 
     @Override
-    public void SoldTickets() {
-
+    public void SoldTickets(Spectacol spec) {
+        System.out.println("This is is wrong #####################");
+        serv.SoldTickets(spec);
     }
 }

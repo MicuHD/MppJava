@@ -14,8 +14,9 @@ import java.util.List;
  */
 public interface IServer{
     List<Spectacol> getSpecacol() throws ChatException;
-//    boolean cumparare(Spectacol spec, String nume,Integer nrbilete);
+    //boolean cumparare(Spectacol spec, String nume,Integer nrbilete);
+    boolean cumparare(Cumparator cump) throws ChatException;
     List<Spectacol> cautare(String data) throws ChatException;
-    void login(Personal pers,IClient client) throws ChatException;
+    Personal login(Personal pers,IClient client) throws ChatException;
     void logout(Personal user,IClient client) throws ChatException;
 }

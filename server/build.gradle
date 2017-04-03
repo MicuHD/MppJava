@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    ompile project (':mModel')
+    compile project (':model')
     compile project (':services')
     compile project (':persistence')
     compile project (':nNetworking')

@@ -1,5 +1,6 @@
 package network.dto;
 
+import aplicatie.domain.Cumparator;
 import aplicatie.domain.Personal;
 import aplicatie.domain.Spectacol;
 
@@ -40,6 +41,16 @@ public class DTOUtils {
           String ora = spectacol.getOra();
         return new SpectacolDTO(id,locatie,disponibile,vandute,artist,data,ora);
     }
+    public static CumparatorDTO getDTO(Cumparator cump){
+        Integer id = cump.getId();
+        String nume = cump.getNume();
+        Integer bilete = cump.getBilete();
+        Integer spec = cump.getIdSpectacol();
+
+        return new CumparatorDTO(id,nume,bilete,spec);
+    }
+
+
     public static CuvantDTO getDTO(String str){
         return new CuvantDTO(str);
     }
@@ -53,6 +64,14 @@ public class DTOUtils {
         String data = mdto.getData();
         String ora = mdto.getOra();
         return new Spectacol(id,locatie,disponibile,vandute,artist,data,ora);
+
+    }
+    public static Cumparator getFromDTO(CumparatorDTO mdto){
+        Integer id = mdto.getId();
+        String nume = mdto.getNume();
+        Integer bilete = mdto.getBilete();
+        Integer spec = mdto.getShow();
+        return new Cumparator(id,nume,bilete,spec);
 
     }
 

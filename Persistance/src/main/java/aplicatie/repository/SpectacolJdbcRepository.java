@@ -66,8 +66,16 @@ public class SpectacolJdbcRepository implements IRepository<Integer,Spectacol> {
 
     @Override
     public void update(Integer integer, Spectacol entity) {
-        delete(integer);
-        save(entity);
+        Connection con=dbUtils.getConnection();
+        try(PreparedStatement preStmt=con.prepareStatement("UPDATE Spectacol SET Disponibile=?,vandute=? WHERE Id = ?;")){
+            preStmt.setInt(1,entity.getDisponibile());
+            preStmt.setInt(2,entity.getVandute());
+            preStmt.setInt(3,entity.getId());
+
+            int result=preStmt.executeUpdate();
+        }catch (SQLException ex){
+            System.out.println("Error DB "+ex);
+        }
     }
 
     @Override

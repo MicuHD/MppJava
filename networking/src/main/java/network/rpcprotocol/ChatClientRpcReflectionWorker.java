@@ -1,14 +1,13 @@
 package network.rpcprotocol;
 
 
+import aplicatie.domain.Cumparator;
 import aplicatie.domain.Personal;
 import aplicatie.domain.Spectacol;
 import aplicatie.service.ChatException;
 import aplicatie.service.IClient;
 import aplicatie.service.IServer;
-import network.dto.CuvantDTO;
-import network.dto.DTOUtils;
-import network.dto.PersDTO;
+import network.dto.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -95,7 +94,9 @@ public class ChatClientRpcReflectionWorker implements Runnable, IClient {
         PersDTO udto=(PersDTO)request.data();
         Personal user= DTOUtils.getFromDTO(udto);
         try {
-            server.login(user, this);
+            Personal pers = server.login(user, this);
+            udto = DTOUtils.getDTO(pers);
+            okResponse=new Response.Builder().type(ResponseType.OK).data(udto).build();
             return okResponse;
         } catch (ChatException e) {
             connected=false;
@@ -132,33 +133,33 @@ public class ChatClientRpcReflectionWorker implements Runnable, IClient {
         }
     }
 
+    private Response handleSELL_TICKET(Request request){
+        System.out.println("SELL TICKET request ..."+request.type());
 
-//    private Response handleLOGOUT(Request request){
-//        System.out.println("Logout request...");
-//        UserDTO udto=(UserDTO)request.data();
-//        User user=DTOUtils.getFromDTO(udto);
-//        try {
-//            server.logout(user, this);
-//            connected=false;
-//            return okResponse;
-//
-//        } catch (ChatException e) {
-//            return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
-//        }
-//    }
-//    private Response handleSEND_MESSAGE(Request request){
-//            System.out.println("SendMessageRequest ...");
-//            MessageDTO mdto=(MessageDTO)request.data();
-//            Message message=DTOUtils.getFromDTO(mdto);
-//            try {
-//                server.sendMessage(message);
-//                return okResponse;
-//            } catch (ChatException e) {
-//                return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
-//            }
-//
-//
-//    }
+        try {
+            CumparatorDTO cdto = (CumparatorDTO) request.data();
+            boolean ok = server.cumparare(DTOUtils.getFromDTO(cdto));
+            return okResponse;
+        } catch (ChatException e) {
+            connected=false;
+            return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
+        }
+    }
+
+
+    private Response handleLOGOUT(Request request){
+        System.out.println("Logout request...");
+        PersDTO udto=(PersDTO)request.data();
+        Personal user=DTOUtils.getFromDTO(udto);
+        try {
+            server.logout(user, this);
+            connected=false;
+            return okResponse;
+
+        } catch (ChatException e) {
+            return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
+        }
+    }
 
     private void sendResponse(Response response) throws IOException{
         System.out.println("sending response "+response);
@@ -166,8 +167,14 @@ public class ChatClientRpcReflectionWorker implements Runnable, IClient {
         output.flush();
     }
 
-    @Override
-    public void SoldTickets() {
-
+    public void SoldTickets(Spectacol spec) throws ChatException {
+        SpectacolDTO specdto = DTOUtils.getDTO(spec);
+        Response resp=new Response.Builder().type(ResponseType.SOLD_TICKET).data(specdto).build();
+        System.out.println("SOLD TICKET");
+        try {
+            sendResponse(resp);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
