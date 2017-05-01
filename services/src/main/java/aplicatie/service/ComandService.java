@@ -6,7 +6,6 @@ import aplicatie.domain.Spectacol;
 
 import aplicatie.repository.IRepository;
 import aplicatie.repository.IUserRepository;
-import aplicatie.utils.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,11 +59,11 @@ public class ComandService implements IServer {
     }
 
     @Override
-    public Personal login(Personal pers, IClient client) throws ChatException {
+    public Personal login(Personal pers, IClient client) throws ShowException {
         return null;
     }
 
     @Override
-    public void logout(Personal user, IClient client) throws ChatException {
+    public void logout(Personal user, IClient client) throws ShowException {
     }
 }

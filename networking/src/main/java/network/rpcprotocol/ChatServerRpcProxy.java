@@ -4,7 +4,7 @@ package network.rpcprotocol;
 import aplicatie.domain.Cumparator;
 import aplicatie.domain.Personal;
 import aplicatie.domain.Spectacol;
-import aplicatie.service.ChatException;
+import aplicatie.service.ShowException;
 import aplicatie.service.IClient;
 import aplicatie.service.IServer;
 import network.dto.*;
@@ -40,7 +40,7 @@ public class ChatServerRpcProxy implements IServer {
     }
 
 
-    public List<Spectacol> getSpecacol() throws ChatException {
+    public List<Spectacol> getSpecacol() throws ShowException {
         Request req = new Request.Builder().type(RequestType.GET_SPECTACOLS).build();
         sendRequest(req);
         Response response = readResponse();
@@ -52,7 +52,7 @@ public class ChatServerRpcProxy implements IServer {
         return Arrays.asList(friends);
     }
 
-    public boolean cumparare(Cumparator cump) throws ChatException {
+    public boolean cumparare(Cumparator cump) throws ShowException {
         CumparatorDTO cdto = DTOUtils.getDTO(cump);
         Request req = new Request.Builder().type(RequestType.SELL_TICKET).data(cdto).build();
         sendRequest(req);
@@ -63,7 +63,7 @@ public class ChatServerRpcProxy implements IServer {
         return true;
     }
 
-    public List<Spectacol> cautare(String data) throws ChatException {
+    public List<Spectacol> cautare(String data) throws ShowException {
         CuvantDTO cdto= DTOUtils.getDTO(data);
         Request req = new Request.Builder().type(RequestType.SEARCH_SPECTACOLS).data(cdto).build();
         sendRequest(req);
@@ -76,7 +76,7 @@ public class ChatServerRpcProxy implements IServer {
         return Arrays.asList(friends);
     }
 
-    public Personal login(Personal user, IClient client) throws ChatException {
+    public Personal login(Personal user, IClient client) throws ShowException {
         initializeConnection();
         PersDTO udto= DTOUtils.getDTO(user);
         Request req=new Request.Builder().type(RequestType.LOGIN).data(udto).build();
@@ -90,12 +90,12 @@ public class ChatServerRpcProxy implements IServer {
         if (response.type()== ResponseType.ERROR){
             String err=response.data().toString();
             closeConnection();
-            throw new ChatException(err);
+            throw new ShowException(err);
         }
         return null;
     }
 
-    public void logout(Personal user, IClient client) throws ChatException {
+    public void logout(Personal user, IClient client) throws ShowException {
         Personal pers;
         PersDTO udto=DTOUtils.getDTO(user);
         Request req=new Request.Builder().type(RequestType.LOGOUT).data(udto).build();
@@ -104,7 +104,7 @@ public class ChatServerRpcProxy implements IServer {
         closeConnection();
         if (response.type()== ResponseType.ERROR){
             String err=response.data().toString();
-            throw new ChatException(err);
+            throw new ShowException(err);
         }
     }
 
@@ -120,17 +120,17 @@ public class ChatServerRpcProxy implements IServer {
         }
     }
 
-    private void sendRequest(Request request)throws ChatException {
+    private void sendRequest(Request request)throws ShowException {
         try {
             output.writeObject(request);
             output.flush();
         } catch (IOException e) {
-            throw new ChatException("Error sending object "+e);
+            throw new ShowException("Error sending object "+e);
         }
 
     }
 
-    private Response readResponse() throws ChatException {
+    private Response readResponse() throws ShowException {
         Response response=null;
         try{
             response=qresponses.take();
@@ -140,7 +140,7 @@ public class ChatServerRpcProxy implements IServer {
         }
         return response;
     }
-    private void initializeConnection() throws ChatException {
+    private void initializeConnection() throws ShowException {
         try {
             connection=new Socket(host,port);
             output=new ObjectOutputStream(connection.getOutputStream());
@@ -165,7 +165,7 @@ public class ChatServerRpcProxy implements IServer {
                 SpectacolDTO sdto = (SpectacolDTO)response.data();
                 Spectacol spec = DTOUtils.getFromDTO(sdto);
                 client.SoldTickets(spec);
-            } catch (ChatException e) {
+            } catch (ShowException e) {
                 e.printStackTrace();
             }
         }

@@ -1,10 +1,9 @@
 package network.rpcprotocol;
 
 
-import aplicatie.domain.Cumparator;
 import aplicatie.domain.Personal;
 import aplicatie.domain.Spectacol;
-import aplicatie.service.ChatException;
+import aplicatie.service.ShowException;
 import aplicatie.service.IClient;
 import aplicatie.service.IServer;
 import network.dto.*;
@@ -98,7 +97,7 @@ public class ChatClientRpcReflectionWorker implements Runnable, IClient {
             udto = DTOUtils.getDTO(pers);
             okResponse=new Response.Builder().type(ResponseType.OK).data(udto).build();
             return okResponse;
-        } catch (ChatException e) {
+        } catch (ShowException e) {
             connected=false;
             return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
         }
@@ -112,7 +111,7 @@ public class ChatClientRpcReflectionWorker implements Runnable, IClient {
             List<Spectacol> specacol = server.getSpecacol();
             Response getResponse=new Response.Builder().type(ResponseType.GET_SPECTACOLS).data(DTOUtils.getDTO(specacol)).build();
             return getResponse;
-        } catch (ChatException e) {
+        } catch (ShowException e) {
             connected=false;
             return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
         }
@@ -127,7 +126,7 @@ public class ChatClientRpcReflectionWorker implements Runnable, IClient {
             List<Spectacol> specacol = server.cautare(cuv);
             Response getResponse=new Response.Builder().type(ResponseType.SEARCH_SPECTACOLS).data(DTOUtils.getDTO(specacol)).build();
             return getResponse;
-        } catch (ChatException e) {
+        } catch (ShowException e) {
             connected=false;
             return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
         }
@@ -140,7 +139,7 @@ public class ChatClientRpcReflectionWorker implements Runnable, IClient {
             CumparatorDTO cdto = (CumparatorDTO) request.data();
             boolean ok = server.cumparare(DTOUtils.getFromDTO(cdto));
             return okResponse;
-        } catch (ChatException e) {
+        } catch (ShowException e) {
             connected=false;
             return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
         }
@@ -156,7 +155,7 @@ public class ChatClientRpcReflectionWorker implements Runnable, IClient {
             connected=false;
             return okResponse;
 
-        } catch (ChatException e) {
+        } catch (ShowException e) {
             return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
         }
     }
@@ -167,7 +166,7 @@ public class ChatClientRpcReflectionWorker implements Runnable, IClient {
         output.flush();
     }
 
-    public void SoldTickets(Spectacol spec) throws ChatException {
+    public void SoldTickets(Spectacol spec) throws ShowException {
         SpectacolDTO specdto = DTOUtils.getDTO(spec);
         Response resp=new Response.Builder().type(ResponseType.SOLD_TICKET).data(specdto).build();
         System.out.println("SOLD TICKET");

@@ -3,8 +3,7 @@ package aplicatie.View;
 
 import aplicatie.domain.Personal;
 import aplicatie.domain.Spectacol;
-import aplicatie.service.ChatException;
-import aplicatie.service.ComandService;
+import aplicatie.service.ShowException;
 import aplicatie.service.IClient;
 import aplicatie.service.IServer;
 import javafx.fxml.FXML;
@@ -14,10 +13,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import javax.smartcardio.CommandAPDU;
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import java.io.IOException;
-import java.net.ConnectException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
@@ -85,7 +82,7 @@ public class LoginView implements IClient{
 
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-        } catch (ChatException e) {
+        } catch (ShowException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");
             alert.setHeaderText("Look, an Error Dialog");

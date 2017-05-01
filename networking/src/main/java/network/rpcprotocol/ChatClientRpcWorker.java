@@ -3,7 +3,7 @@ package network.rpcprotocol;
 import aplicatie.domain.Cumparator;
 import aplicatie.domain.Personal;
 import aplicatie.domain.Spectacol;
-import aplicatie.service.ChatException;
+import aplicatie.service.ShowException;
 import aplicatie.service.IClient;
 import aplicatie.service.IServer;
 import network.dto.*;
@@ -77,7 +77,7 @@ public class ChatClientRpcWorker implements Runnable, IClient {
                 Personal pers = server.login(user, this);
                 okResponse=new Response.Builder().type(ResponseType.OK).data(DTOUtils.getDTO(pers)).build();
                 return okResponse;
-            } catch (ChatException e) {
+            } catch (ShowException e) {
                 connected=false;
                 return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
             }
@@ -92,7 +92,7 @@ public class ChatClientRpcWorker implements Runnable, IClient {
                 connected=false;
                 return okResponse;
 
-            } catch (ChatException e) {
+            } catch (ShowException e) {
                 return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
             }
         }
@@ -103,7 +103,7 @@ public class ChatClientRpcWorker implements Runnable, IClient {
 
                 return okResponse;
 
-            } catch (ChatException e) {
+            } catch (ShowException e) {
                 return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
             }
         }
@@ -118,7 +118,7 @@ public class ChatClientRpcWorker implements Runnable, IClient {
                 //SpectacolDTO[] specdto =
                 //return =new Response.Builder().type(ResponseType.SEARCH_SPECTACOLS).data().build();;
                 return okResponse;
-            } catch (ChatException e) {
+            } catch (ShowException e) {
                 return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
             }
         }
@@ -129,7 +129,7 @@ public class ChatClientRpcWorker implements Runnable, IClient {
                 Cumparator cump = DTOUtils.getFromDTO(udto);
                 boolean  ok = server.cumparare(cump);
                 return okResponse;
-            } catch (ChatException e) {
+            } catch (ShowException e) {
                 return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
             }
         }
