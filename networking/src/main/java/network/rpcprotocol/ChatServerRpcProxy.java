@@ -8,11 +8,12 @@ import aplicatie.service.ShowException;
 import aplicatie.service.IClient;
 import aplicatie.service.IServer;
 import network.dto.*;
+import network.stringprotocol.StringRequest;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
+import java.net.ConnectException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -27,83 +28,97 @@ public class ChatServerRpcProxy implements IServer {
 
     private IClient client;
 
-    private ObjectInputStream input;
-    private ObjectOutputStream output;
+    private InputStream input;
+    private OutputStream output;
     private Socket connection;
 
-    private BlockingQueue<Response> qresponses;
+    private BlockingQueue<String> qresponses;
     private volatile boolean finished;
     public ChatServerRpcProxy(String host, int port) {
         this.host = host;
         this.port = port;
-        qresponses=new LinkedBlockingQueue<Response>();
+        qresponses=new LinkedBlockingQueue<String>();
     }
 
 
     public List<Spectacol> getSpecacol() throws ShowException {
-        Request req = new Request.Builder().type(RequestType.GET_SPECTACOLS).build();
-        sendRequest(req);
-        Response response = readResponse();
-        if(response.type() == ResponseType.ERROR){
+        //Request req = new Request.Builder().type(RequestType.GET_SPECTACOLS).build();
+        String request = StringRequest.createGetShowsRequest();
+        sendRequest(request);
+        String response = readResponse();
+        if(StringRequest.getResponseType(response) == ResponseType.ERROR){
 
         }
-        SpectacolDTO[] frDTO=(SpectacolDTO[])response.data();
-        Spectacol[] friends=DTOUtils.getFromDTO(frDTO);
-        return Arrays.asList(friends);
+        List<Spectacol> friends = StringRequest.getShowsFromRequest(response);
+        //SpectacolDTO[] frDTO=(SpectacolDTO[])response.data();
+        //Spectacol[] friends=DTOUtils.getFromDTO(frDTO);
+        return friends;
     }
 
     public boolean cumparare(Cumparator cump) throws ShowException {
         CumparatorDTO cdto = DTOUtils.getDTO(cump);
-        Request req = new Request.Builder().type(RequestType.SELL_TICKET).data(cdto).build();
+        String req = StringRequest.CumparareRequest(cump);
         sendRequest(req);
-        Response response = readResponse();
-        if(response.type() == ResponseType.ERROR){
+        String response = readResponse();
+        if(StringRequest.getResponseType(response) == ResponseType.ERROR){
             return false;
         }
+        System.out.print("Ok Received");
         return true;
     }
 
     public List<Spectacol> cautare(String data) throws ShowException {
-        CuvantDTO cdto= DTOUtils.getDTO(data);
-        Request req = new Request.Builder().type(RequestType.SEARCH_SPECTACOLS).data(cdto).build();
-        sendRequest(req);
-        Response response = readResponse();
-        if(response.type() == ResponseType.ERROR){
-
+        List<Spectacol> specs = getSpecacol();
+        List<Spectacol> trimmed = new ArrayList<>();
+        for (Spectacol spec:specs) {
+            if(spec.getData().equals(data)){
+                trimmed.add(spec);
+            }
         }
-        SpectacolDTO[] frDTO=(SpectacolDTO[])response.data();
-        Spectacol[] friends=DTOUtils.getFromDTO(frDTO);
-        return Arrays.asList(friends);
+        return trimmed;
+        /// /CuvantDTO cdto= DTOUtils.getDTO(data);
+        //Request req = new Request.Builder().type(RequestType.SEARCH_SPECTACOLS).data(cdto).build();
+        //sendRequest(req);
+//        Response response = readResponse();
+//        if(response.type() == ResponseType.ERROR){
+//
+//        }
+//        SpectacolDTO[] frDTO=(SpectacolDTO[])response.data();
+        //Spectacol[] friends=DTOUtils.getFromDTO(frDTO);
+        // return Arrays.asList(friends);
     }
 
     public Personal login(Personal user, IClient client) throws ShowException {
-        initializeConnection();
-        PersDTO udto= DTOUtils.getDTO(user);
-        Request req=new Request.Builder().type(RequestType.LOGIN).data(udto).build();
-        sendRequest(req);
-        Response response=readResponse();
-        if (response.type()== ResponseType.OK){
-            this.client=client;
-            Personal pers = DTOUtils.getFromDTO((PersDTO) response.data());
-            return pers;
-        }
-        if (response.type()== ResponseType.ERROR){
-            String err=response.data().toString();
-            closeConnection();
-            throw new ShowException(err);
-        }
+        //try{
+            initializeConnection();
+    //        PersDTO udto= DTOUtils.getDTO(user);
+    //        Request req=new Request.Builder().type(RequestType.LOGIN).data(udto).build();
+            String req = StringRequest.createLoginRequest(user);
+            sendRequest(req);
+            String response = readResponse();
+            if (StringRequest.getResponseType(response)== ResponseType.OK){
+                this.client=client;
+                //Personal pers = DTOUtils.getFromDTO((PersDTO) response.data());
+                return user;
+            }
+            if (StringRequest.getResponseType(response)== ResponseType.ERROR){
+                String err=StringRequest.getErrorMessage(response);
+                closeConnection();
+                throw new ShowException(err);
+            }
         return null;
     }
 
     public void logout(Personal user, IClient client) throws ShowException {
         Personal pers;
         PersDTO udto=DTOUtils.getDTO(user);
-        Request req=new Request.Builder().type(RequestType.LOGOUT).data(udto).build();
-        sendRequest(req);
-        Response response=readResponse();
+        //Request req=new Request.Builder().type(RequestType.LOGOUT).data(udto).build();
+        String request = StringRequest.createLogoutRequest(user);
+        sendRequest(request);
+        String response=readResponse();
         closeConnection();
-        if (response.type()== ResponseType.ERROR){
-            String err=response.data().toString();
+        if (StringRequest.getResponseType(response)== ResponseType.ERROR){
+            String err=StringRequest.getErrorMessage(response);
             throw new ShowException(err);
         }
     }
@@ -120,9 +135,14 @@ public class ChatServerRpcProxy implements IServer {
         }
     }
 
-    private void sendRequest(Request request)throws ShowException {
+    private void sendRequest(String request)throws ShowException {
         try {
-            output.writeObject(request);
+            System.out.println(request);
+            char[] charArray = request.toCharArray();
+            byte[] byteArray = request.getBytes();
+            System.out.println(byteArray);
+            System.out.println("Mesaj");
+            output.write(byteArray);
             output.flush();
         } catch (IOException e) {
             throw new ShowException("Error sending object "+e);
@@ -130,8 +150,8 @@ public class ChatServerRpcProxy implements IServer {
 
     }
 
-    private Response readResponse() throws ShowException {
-        Response response=null;
+    private String readResponse() throws ShowException {
+        String response=null;
         try{
             response=qresponses.take();
 
@@ -143,12 +163,14 @@ public class ChatServerRpcProxy implements IServer {
     private void initializeConnection() throws ShowException {
         try {
             connection=new Socket(host,port);
-            output=new ObjectOutputStream(connection.getOutputStream());
+            output=connection.getOutputStream();
             output.flush();
-            input=new ObjectInputStream(connection.getInputStream());
+            input=connection.getInputStream();
             finished=false;
             startReader();
-        } catch (IOException e) {
+        }catch (ConnectException err){
+            throw new ShowException("Connection refused");
+        }catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -157,13 +179,13 @@ public class ChatServerRpcProxy implements IServer {
         tw.start();
     }
 
-    private void handleUpdate(Response response){
-        if (response.type()== ResponseType.SOLD_TICKET){
+    private void handleUpdate(String response){
+        if (StringRequest.getResponseType(response) == ResponseType.SOLD_TICKET){
 
             System.out.println("SOLT TICKET");
             try {
-                SpectacolDTO sdto = (SpectacolDTO)response.data();
-                Spectacol spec = DTOUtils.getFromDTO(sdto);
+                Spectacol spec = StringRequest.getShowFromRequest(response);
+                //Spectacol spec = DTOUtils.getFromDTO(sdto);
                 client.SoldTickets(spec);
             } catch (ShowException e) {
                 e.printStackTrace();
@@ -179,21 +201,24 @@ public class ChatServerRpcProxy implements IServer {
         public void run() {
             while(!finished){
                 try {
-                    Object response=input.readObject();
-                    System.out.println("response received "+response);
-                    if (isUpdate((Response)response)){
-                        handleUpdate((Response)response);
-                    }else{
+                    byte[] respArray = new byte[1024];
+                    input.read(respArray);
+                    //Object response=input.read();
+                    String response = new String(respArray);
 
-                        try {
-                            qresponses.put((Response)response);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    System.out.println("response received "+response);
+                      if (StringRequest.getResponseType(response) == ResponseType.SOLD_TICKET){
+                           handleUpdate(response);
+                      }else {
+
+                          try {
+                              qresponses.put((String) response);
+                          } catch (InterruptedException e) {
+                              e.printStackTrace();
+                          }
+                      }
+
                 } catch (IOException e) {
-                    System.out.println("Reading error "+e);
-                } catch (ClassNotFoundException e) {
                     System.out.println("Reading error "+e);
                 }
             }

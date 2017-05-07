@@ -53,11 +53,11 @@ public class LoginView implements IClient{
             //Personal pers = service.login(userField.getText(),hex.toString());
             Personal pers = service.login(new Personal(userField.getText(),hex.toString()),this);
             System.out.println("yeeep");
-//            System.out.println(pers.getNume());
-//            if(pers.equals(null)){
-//                label.setText("Parola sau user invalide!");
-//            }
-//            else{
+            System.out.println(pers.getNume());
+            if(pers.equals(null)){
+                label.setText("Parola sau user invalide!");
+            }
+            else{
                 FXMLLoader loader=new FXMLLoader(getClass().getResource("comandPanel.fxml"));
                 AnchorPane myPane = null;
                 try {
@@ -78,7 +78,7 @@ public class LoginView implements IClient{
                 thisStage.close();
 
                 label.setText("Totul e ok!");
-//            }
+            }
 
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
