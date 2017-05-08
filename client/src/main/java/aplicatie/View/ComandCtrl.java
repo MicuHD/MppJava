@@ -1,12 +1,11 @@
 package aplicatie.View;
 
-
 import aplicatie.domain.Cumparator;
 import aplicatie.domain.Personal;
 import aplicatie.domain.Spectacol;
-import aplicatie.service.ShowException;
 import aplicatie.service.IClient;
 import aplicatie.service.IServer;
+import aplicatie.service.ShowException;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,7 +19,7 @@ import java.util.List;
 /**
  * Created by Micu on 3/18/2017.
  */
-public class ComandCtrl implements IClient{
+public class ComandCtrl implements IClient {
     private ObservableList<Spectacol> model;
     private ObservableList<Spectacol> modelC;
     private Personal personal;

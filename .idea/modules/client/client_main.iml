@@ -9,9 +9,5 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="model_main" />
-    <orderEntry type="module" module-name="services_main" />
-    <orderEntry type="module" module-name="Persistance_main" />
-    <orderEntry type="module" module-name="networking_main" />
   </component>
 </module>

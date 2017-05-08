@@ -3,9 +3,9 @@ package network.rpcprotocol;
 
 import aplicatie.domain.Personal;
 import aplicatie.domain.Spectacol;
-import aplicatie.service.ShowException;
 import aplicatie.service.IClient;
 import aplicatie.service.IServer;
+import aplicatie.service.ShowException;
 import network.dto.*;
 
 import java.io.IOException;
